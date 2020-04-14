@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Analyst: <span style='color:green'> {{ user.username }} </span></h2>
+    <h4>{% if user.last_login %}<p>Last Login: {{ user.last_login }}</p>{% endif %}</h4>
+    <hr>
+    {% for import in imports %}
+    <p>
+    {{ import.analyst.username }} says: <b>{{ import.file_name }}</b>
+    </p>
+    {% endfor %}
+{% endblock %}
