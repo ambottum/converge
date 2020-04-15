@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+
+   {% if headers %}
+   <h1>{{ headers }}</h1>
+   {% endif %}
+
+   <h1>Upload new File</h1>
+
+   <form method="post" enctype="multipart/form-data" action="{{ url_for('upload_file') }}">
+     <p><input type=file name=file>
+        <input type=submit value=Upload>
+   </form>
+
+   <h1>Result:</h1>
+   {% if img_src %}
+     <img src="{{ img_src }}">
+   {% endif %}
+
+   {% if extracted_text %}
+     <p> The extracted text from the image above is: <b> {{ extracted_text }} </b></p>
+
+   {% else %}
+     The extracted text will be displayed here
+   {% endif %}
+{% endblock %}
