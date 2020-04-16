@@ -20,8 +20,7 @@ ALLOWED_EXTENSIONS = set(['csv','xls','xlsx'])
 # function to check the file extension
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
+    filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/')
 @app.route('/index')
@@ -51,9 +50,9 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
-        #next_page = request.args.get('next')
-        #if not next_page or url_parse(next_page).netloc != '':
-        #    next_page = url_for('upload_file')
+                        #next_page = request.args.get('next')
+                        #if not next_page or url_parse(next_page).netloc != '':
+                        #    next_page = url_for('upload_file')
         return redirect(url_for('upload_file'))
     return render_template('login.html', title='Sign In', form=form)
 
@@ -75,6 +74,7 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
 @app.route('/user/<username>')
 @login_required
 def user(username):
@@ -94,18 +94,16 @@ def before_request():
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        # check if there is a file in the request
+    # check if there is a file in the request
         if 'file' not in request.files:
             return render_template('upload.html', msg='No file selected')
-        file = request.files['file']
-        # if no file is selected
+            file = request.files['file']
+            # if no file is selected
         if file.filename == '':
             return render_template('upload.html', msg='No file selected')
 
         if file and allowed_file(file.filename):
-	    if True:
-
-
+            if True:
                 with open(file) as csv_file:
                     csv_reader = csv.reader(csv_file, delimiter=',')
                     line_count = 0
@@ -116,17 +114,9 @@ def upload_file():
                         else:
                             line_count += 1
 
-
-	    
-
-
- 
-		
-
-            return render_template('upload.html',
-                                   headers=headers,
-                                   img_src=UPLOAD_FOLDER + file.filename)
-    elif request.method == 'GET':
-        print('here also')
-        return render_template('upload.html')
+                return render_template('upload.html)',
+            headers=headers,
+            img_src=UPLOAD_FOLDER + file.filename)
+        elif request.method == 'GET':
+                return render_template('upload.html')
     return render_template('upload.html')
