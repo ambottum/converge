@@ -13,8 +13,8 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 from werkzeug.utils import secure_filename
 
-# define a folder to store and later serve the images
-UPLOAD_FOLDER = '/Users/annabottum/Desktop'
+#reading in env variable for UPLOAD_FOLDER from __init__.py
+UPLOAD_FOLDER=app.config['UPLOAD_FOLDER']
 # allow files of a specific type
 ALLOWED_EXTENSIONS = set(['csv','xls','xlsx'])
 
@@ -105,27 +105,26 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+            #return redirect(url_for('uploaded_file',filename=filename))
+            img_src=UPLOAD_FOLDER + "/" + file.filename
+            with open(img_src) as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=',')
+                line_count = 0
+                for row in csv_reader:
+                    if line_count == 0:
+                        headers = row
+                        line_count += 1
+                    else:
+                        line_count += 1
+            return render_template('upload.html', msg='File Succesfully Uploaded', filename=img_src, headers=headers) 
             file.save(secure_filename(file.filename))
             # if True:
-            #     with open(file) as csv_file:
-            #         csv_reader = csv.reader(csv_file, delimiter=',')
-            #         line_count = 0
-            #         for row in csv_reader:
-            #             if line_count == 0:
-            #                 headers = row
-            #                 line_count += 1
-            #             else:
-            #                 line_count += 1
 
-            return render_template('upload.html', msg='File Uploaded Succesfully',
-            #headers=headers,
-            img_src=UPLOAD_FOLDER + file.filename)
+
     elif request.method == 'GET':
         return render_template('upload.html')
 
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+# @app.route('/uploads/<filename>')
+# def uploaded_file(filename):
+#     return send_from_directory(app.config['UPLOAD_FOLDER'],
+#                                filename)

@@ -2,9 +2,9 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 {% block app_content %}
 
-   {% if headers %}
+<!--    {% if headers %}
    <h1>{{ headers }}</h1>
-   {% endif %}
+   {% endif %} -->
 
    <h1>Upload new File</h1>
 
@@ -14,14 +14,15 @@
    </form>
 
    <h1>Result:</h1>
-   {% if img_src %}
+<!--    {% if img_src %}
      <img src="{{ img_src }}">
-   {% endif %}
+   {% endif %} -->
 
-   {% if extracted_text %}
-     <p> The extracted text from the image above is: <b> {{ extracted_text }} </b></p>
+   {% if filename %}
+     <p> The uploaded file is: <b> {{ filename }} </b></p>
+     <p> Column Names are: {{ headers }}</p>
 
-   {% else %}
-     The extracted text will be displayed here
+   {% elif msg %}
+     <p> msg = msg </p>
    {% endif %}
 {% endblock %}
