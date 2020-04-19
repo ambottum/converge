@@ -7,6 +7,8 @@ from flask_bootstrap import Bootstrap
 
 app = Flask(__name__)
 app.config.from_object(Config)
+UPLOAD_FOLDER = '/Users/annabottum/Desktop'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)

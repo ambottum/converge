@@ -2,7 +2,7 @@ import csv, json, sys
 import os
 #from ocr_core import ocr_core
 from app import app,login, db
-from flask import render_template, request
+from flask import render_template, request, send_from_directory
 from werkzeug.urls import url_parse
 from app.forms import LoginForm, RegistrationForm
 from flask import render_template, flash, redirect, url_for
@@ -11,9 +11,10 @@ from app.models import User
 from datetime import datetime
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
+from werkzeug.utils import secure_filename
 
 # define a folder to store and later serve the images
-UPLOAD_FOLDER = '/static/uploads/'
+UPLOAD_FOLDER = '/Users/annabottum/Desktop'
 # allow files of a specific type
 ALLOWED_EXTENSIONS = set(['csv','xls','xlsx'])
 
@@ -97,26 +98,34 @@ def upload_file():
     # check if there is a file in the request
         if 'file' not in request.files:
             return render_template('upload.html', msg='No file selected')
-            file = request.files['file']
-            # if no file is selected
+        file = request.files['file']
+        # if no file is selected
         if file.filename == '':
             return render_template('upload.html', msg='No file selected')
-
         if file and allowed_file(file.filename):
-            if True:
-                with open(file) as csv_file:
-                    csv_reader = csv.reader(csv_file, delimiter=',')
-                    line_count = 0
-                    for row in csv_reader:
-                        if line_count == 0:
-                            headers = row
-                            line_count += 1
-                        else:
-                            line_count += 1
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file',
+                                    filename=filename))
+            file.save(secure_filename(file.filename))
+            # if True:
+            #     with open(file) as csv_file:
+            #         csv_reader = csv.reader(csv_file, delimiter=',')
+            #         line_count = 0
+            #         for row in csv_reader:
+            #             if line_count == 0:
+            #                 headers = row
+            #                 line_count += 1
+            #             else:
+            #                 line_count += 1
 
-                return render_template('upload.html)',
-            headers=headers,
+            return render_template('upload.html', msg='File Uploaded Succesfully',
+            #headers=headers,
             img_src=UPLOAD_FOLDER + file.filename)
-        elif request.method == 'GET':
-                return render_template('upload.html')
-    return render_template('upload.html')
+    elif request.method == 'GET':
+        return render_template('upload.html')
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
