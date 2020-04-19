@@ -9,8 +9,10 @@
    <h1>Upload new File</h1>
 
    <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_file') }}">
-     <p><input type="file" name="file">
+     <p><input type="file" name="file1"></p>
+     <p><input type="file" name="file2"></p>     
         <input type="submit" value=Upload>
+
    </form>
 
    <h1>Result:</h1>
@@ -18,9 +20,42 @@
      <img src="{{ img_src }}">
    {% endif %} -->
 
-   {% if filename %}
-     <p> The uploaded file is: <b> {{ filename }} </b></p>
-     <p> Column Names are: {{ headers }}</p>
+   {% if filename1 %}
+      <table> 
+        <tr>
+          <td>
+            <p> Uploaded File 1 is: <b> {{ filename1 }} </b></p>
+          </td>
+          <td>
+            <p> Uploaded File 2 is: <b> {{ filename2 }} </b></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p> Column Names: </p>
+          </td>
+          <td>
+            <p> Column Names: </p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <ul>
+                {% for header in headers1 %}
+                  <li> {{ header }} </li>
+                {% endfor %}
+              </ul>
+          </td>
+          <td>
+            
+            <ul>
+              {% for header in headers2 %}
+                <li> {{ header }} </li>
+              {% endfor %}
+            </ul>
+           </td>
+        </tr>
+      </table>     
 
    {% elif msg %}
      <p> msg = msg </p>

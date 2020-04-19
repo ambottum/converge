@@ -96,28 +96,41 @@ def before_request():
 def upload_file():
     if request.method == 'POST':
     # check if there is a file in the request
-        if 'file' not in request.files:
+        if 'file1' not in request.files and 'file2' not in request.files:
             return render_template('upload.html', msg='No file selected')
-        file = request.files['file']
+        file1 = request.files['file1']
+        file2 = request.files['file2']
         # if no file is selected
-        if file.filename == '':
+        if file1.filename == '' and file2.filename == '':
             return render_template('upload.html', msg='No file selected')
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        if file1 and allowed_file(file1.filename) and file2 and allowed_file(file2.filename):
+            filename1 = secure_filename(file1.filename)
+            filename2 = secure_filename(file2.filename)
+            file1.save(os.path.join(app.config['UPLOAD_FOLDER'], filename1))
+            file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
             #return redirect(url_for('uploaded_file',filename=filename))
-            img_src=UPLOAD_FOLDER + "/" + file.filename
-            with open(img_src) as csv_file:
+            img_src1=UPLOAD_FOLDER + "/" + file1.filename
+            img_src2=UPLOAD_FOLDER + "/" + file2.filename
+            with open(img_src1) as csv_file:
                 csv_reader = csv.reader(csv_file, delimiter=',')
                 line_count = 0
                 for row in csv_reader:
                     if line_count == 0:
-                        headers = row
+                        headers1 = row
                         line_count += 1
                     else:
                         line_count += 1
-            return render_template('upload.html', msg='File Succesfully Uploaded', filename=img_src, headers=headers) 
-            file.save(secure_filename(file.filename))
+            with open(img_src2) as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=',')
+                line_count = 0
+                for row in csv_reader:
+                    if line_count == 0:
+                        headers2 = row
+                        line_count += 1
+                    else:
+                        line_count += 1                        
+            return render_template('upload.html', msg='File Succesfully Uploaded', filename1=file1.filename, filename2=file2.filename, headers1=headers1, headers2=headers2) 
+            #file.save(secure_filename(file.filename))
             # if True:
 
 
