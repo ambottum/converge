@@ -114,6 +114,7 @@ def upload_file():
             with open(img_src1) as csv_file:
                 csv_reader = csv.reader(csv_file, delimiter=',')
                 line_count = 0
+                #every row is a list
                 for row in csv_reader:
                     if line_count == 0:
                         headers1 = row
@@ -132,15 +133,19 @@ def upload_file():
             return render_template('upload.html', msg='File Succesfully Uploaded', 
                                     filename1=file1.filename, filename2=file2.filename, 
                                     headers1=headers1, headers2=headers2) 
-            print('filename1 is: ',filename1)
-            print('filename2 is: ',filename2)
-
-            #file.save(secure_filename(file.filename))
-            # if True:
-
-
     elif request.method == 'GET':
         return render_template('upload.html')
+
+
+@app.route('/merged_file', methods=['GET', 'POST'])
+def get_headers():
+    if request.method == 'POST': 
+        merge_headers = request.form.getlist('file1') + request.form.getlist('file2')
+        return render_template('merged_file.html', msg='Files Succesfully Merged', merge_headers=merge_headers) 
+    elif request.method == 'GET':
+        return render_template('upload.html')        
+
+
 
 # @app.route('/uploads/<filename>')
 # def uploaded_file(filename):

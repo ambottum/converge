@@ -15,49 +15,49 @@
    <h1>Result:</h1>
   
    {% if filename1 %}
-      <table> 
-        <tr>
-          <td>
-            <p> Uploaded File 1 is: <b> {{ filename1 }} </b></p>
-          </td>
-          <td>
-            <p> Uploaded File 2 is: <b> {{ filename2 }} </b></p>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <p> Column Names: </p>
-          </td>
-          <td>
-            <p> Column Names: </p>
-          </td>
-        </tr>
-        <tr>
-          <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_file') }}">
+      <form method="POST" enctype="multipart/form-data" action="{{ url_for('get_headers') }}">
+        <table> 
+          <tr>
+            <td>
+              <p> Uploaded File 1 is: <b> {{ filename1 }} </b></p>
+            </td>
+            <td>
+              <p> Uploaded File 2 is: <b> {{ filename2 }} </b></p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p> Column Names: </p>
+            </td>
+            <td>
+              <p> Column Names: </p>
+            </td>
+          </tr>
+          <tr>
             <td>
                 <ul>
                   {% for header in headers1 %}
                     <li> 
-                      <input type="checkbox" id={{ header }} value={{ header }}>
+                      <input type="checkbox" id={{ header }} value={{ header }} name='file1' class="danger" >
                       <label for= {{ header }}>{{ header }}</label>
                     </li>
                   {% endfor %}
                 </ul>
             </td>
             <td>
-              
               <ul>
                 {% for header in headers2 %}
                   <li> 
-                    <input type="checkbox" id={{ header }} value={{ header }}>
+                    <input type="checkbox" id={{ header }} value={{ header }} name='file2'>
                     <label for={{ header }}>{{ header }}</label>
                   </li>
                 {% endfor %}
               </ul>
-             </td>
-           </form>  
-        </tr>
-      </table>
+            </td>  
+          </tr>
+        </table>
+        <input type="submit" value=Submit>
+      </form>
    {% elif msg %}
      <p> msg = msg </p>
    {% endif %}
