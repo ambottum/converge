@@ -2,24 +2,18 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 {% block app_content %}
 
-<!--    {% if headers %}
-   <h1>{{ headers }}</h1>
-   {% endif %} -->
+  <h1>Upload new File</h1>
 
-   <h1>Upload new File</h1>
+  <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_file') }}">
+    <p><input type="file" name="file1"></p>
+    <p><input type="file" name="file2"></p>     
+      <input type="submit" value=Upload>
 
-   <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_file') }}">
-     <p><input type="file" name="file1"></p>
-     <p><input type="file" name="file2"></p>     
-        <input type="submit" value=Upload>
+    </form>
 
-   </form>
 
    <h1>Result:</h1>
-<!--    {% if img_src %}
-     <img src="{{ img_src }}">
-   {% endif %} -->
-
+  
    {% if filename1 %}
       <table> 
         <tr>
@@ -39,25 +33,33 @@
           </td>
         </tr>
         <tr>
-          <td>
+          <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_file') }}">
+            <td>
+                <ul>
+                  {% for header in headers1 %}
+                    <li> 
+                      <input type="checkbox" id={{ header }} value={{ header }}>
+                      <label for= {{ header }}>{{ header }}</label>
+                    </li>
+                  {% endfor %}
+                </ul>
+            </td>
+            <td>
+              
               <ul>
-                {% for header in headers1 %}
-                  <li> {{ header }} </li>
+                {% for header in headers2 %}
+                  <li> 
+                    <input type="checkbox" id={{ header }} value={{ header }}>
+                    <label for={{ header }}>{{ header }}</label>
+                  </li>
                 {% endfor %}
               </ul>
-          </td>
-          <td>
-            
-            <ul>
-              {% for header in headers2 %}
-                <li> {{ header }} </li>
-              {% endfor %}
-            </ul>
-           </td>
+             </td>
+           </form>  
         </tr>
-      </table>     
-
+      </table>
    {% elif msg %}
      <p> msg = msg </p>
    {% endif %}
+
 {% endblock %}

@@ -128,8 +128,13 @@ def upload_file():
                         headers2 = row
                         line_count += 1
                     else:
-                        line_count += 1                        
-            return render_template('upload.html', msg='File Succesfully Uploaded', filename1=file1.filename, filename2=file2.filename, headers1=headers1, headers2=headers2) 
+                        line_count += 1              
+            return render_template('upload.html', msg='File Succesfully Uploaded', 
+                                    filename1=file1.filename, filename2=file2.filename, 
+                                    headers1=headers1, headers2=headers2) 
+            print('filename1 is: ',filename1)
+            print('filename2 is: ',filename2)
+
             #file.save(secure_filename(file.filename))
             # if True:
 
