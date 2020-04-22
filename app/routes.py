@@ -140,8 +140,12 @@ def upload_file():
 @app.route('/merged_file', methods=['GET', 'POST'])
 def get_headers():
     if request.method == 'POST': 
-        merge_headers = request.form.getlist('file1') + request.form.getlist('file2')
-        return render_template('merged_file.html', msg='Files Succesfully Merged', merge_headers=merge_headers) 
+        #merge_headers is a list of all values that are checked 
+        merge_headers1 = request.form.getlist('file1') 
+        merge_headers2 = request.form.getlist('file2')
+        print('Merger Headers 1: ' + str(merge_headers1))
+        print('Merger Headers 2: ' + str(merge_headers2))       
+        return render_template('merged_file.html', msg='Files Succesfully Merged', merge_headers1=merge_headers1, merge_headers2=merge_headers2) 
     elif request.method == 'GET':
         return render_template('upload.html')        
 

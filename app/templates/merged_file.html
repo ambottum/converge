@@ -2,11 +2,33 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 {% block app_content %}
 
-hi
-{% if merge_headers %}
-	<h4>
-		{{ merge_headers }}
-	</h4>
+{% if merge_headers1 %}
+	<form method="POST" enctype="multipart/form-data" action="{{url_for('get_headers')}}">
+		<table>
+			<tr>
+				<td>
+			    	<p> Columns Selected from File 1: <b> {{ merge_headers1 }} </b></p>
+			    	<p> Columns Selected from File 2: <b> {{ merge_headers2 }} </b></p>
+			    </td>
+			    	{% for head in merge_headers1 %}
+			    		<li>
+			    			HHHELLLLOOOOO
+			    			<input type="radio" name="merge_headers1" id={{ header }} value={{ header }}>
+			    			<label for= {{ header }}>{{ header }}</label>
+			    		</li>
+			    	{% endfor %}
+			    	{% for head in merger_headers2 %}
+			    		<li>
+			    			HIIIIIIII
+			    			<input type="radio" name="merge_headers2" id={{ header }} value={{ header }}>
+			    			<label for= {{ header }}>{{ header }}</label>
+			    		</li>
+			    	{% endfor %}
+			    </tr>	
+		</table>    
+
+{% elif msg %}
+	<p> msg = msg </p>	
 {% endif %}		
 
 
