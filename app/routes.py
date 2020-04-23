@@ -130,9 +130,15 @@ def upload_file():
                         line_count += 1
                     else:
                         line_count += 1              
+            #replace spaces with underscores             
+            for i in range(len(headers1)):
+                headers1[i] = headers1[i].replace(" ","_")
+            for i in range(len(headers2)):
+                headers2[i] = headers2[i].replace(" ","_")
             return render_template('upload.html', msg='File Succesfully Uploaded', 
                                     filename1=file1.filename, filename2=file2.filename, 
                                     headers1=headers1, headers2=headers2) 
+
     elif request.method == 'GET':
         return render_template('upload.html')
 
@@ -143,9 +149,11 @@ def get_headers():
         #merge_headers is a list of all values that are checked 
         merge_headers1 = request.form.getlist('file1') 
         merge_headers2 = request.form.getlist('file2')
+        foreign_key1 = request.form['fkey1']
+        foreign_key2 = request.form['fkey2']
         print('Merger Headers 1: ' + str(merge_headers1))
         print('Merger Headers 2: ' + str(merge_headers2))       
-        return render_template('merged_file.html', msg='Files Succesfully Merged', merge_headers1=merge_headers1, merge_headers2=merge_headers2) 
+        return render_template('merged_file.html', msg='Files Succesfully Merged', merge_headers1=merge_headers1, merge_headers2=merge_headers2, foreign_key1=foreign_key1, foreign_key2=foreign_key2) 
     elif request.method == 'GET':
         return render_template('upload.html')        
 

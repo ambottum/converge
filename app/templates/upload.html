@@ -38,7 +38,8 @@
                 <ul>
                   {% for header in headers1 %}
                     <li> 
-                      <input type="checkbox" id={{ header }} value={{ header }} name= class="file1" >
+                      <input type="checkbox" id={{ header }} value={{ header }} name="file1" >
+                      <input type="radio" id={{ header }} value={{ header }} name="fkey1" >
                       <label for= {{ header }}>{{ header }}</label>
                     </li>
                   {% endfor %}
@@ -49,6 +50,7 @@
                 {% for header in headers2 %}
                   <li> 
                     <input type="checkbox" id={{ header }} value={{ header }} name='file2'>
+                    <input type="radio" id={{ header }} value={{ header }} name="fkey2" >
                     <label for={{ header }}>{{ header }}</label>
                   </li>
                 {% endfor %}
