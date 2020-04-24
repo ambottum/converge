@@ -5,7 +5,7 @@ import pandas as pd
 from app import app,login, db
 from flask import render_template, request, send_from_directory
 from werkzeug.urls import url_parse
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm, HiddenForm
 from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
@@ -112,6 +112,9 @@ def upload_file():
             #return redirect(url_for('uploaded_file',filename=filename))
             img_src1=UPLOAD_FOLDER + "/" + file1.filename
             img_src2=UPLOAD_FOLDER + "/" + file2.filename
+
+            form=HiddenForm(path1=img_src1, path2=img_src2)
+
             with open(img_src1) as csv_file:
                 csv_reader = csv.reader(csv_file, delimiter=',')
                 line_count = 0
@@ -138,7 +141,7 @@ def upload_file():
                 headers2[i] = headers2[i].replace(" ","_")
             return render_template('upload.html', msg='File Succesfully Uploaded', 
                                     filename1=file1.filename, filename2=file2.filename, 
-                                    headers1=headers1, headers2=headers2, img_src1=img_src1, img_src2=img_src2) 
+                                    headers1=headers1, headers2=headers2, form=form) 
 
     elif request.method == 'GET':
         return render_template('upload.html')
@@ -150,14 +153,26 @@ def get_headers():
         #merge_headers is a list of all values that are checked 
         merge_headers1 = request.form.getlist('file1') 
         merge_headers2 = request.form.getlist('file2')
-        img_src1 = request.form['file1_location']
-        img_src2 = request.form['file2_location']
+        form=HiddenForm(request.values)
         foreign_key1 = request.form['fkey1']
         foreign_key2 = request.form['fkey2']
+        print(form.data['path1'])
         #this will be the pandas code here
-        file1 = pd.read_csv(img_src1)
-        file2 = pd.read_csv(img_src2)
-        print(file1.head())
+        #open spreadsheets to begin merge process
+        df1 = pd.read_csv(form.data['path1'])
+        df2 = pd.read_csv(form.data['path2'])
+        for i in range(len(merge_headers1)):
+            merge_headers1[i] = merge_headers1[i].replace("_"," ")
+        for i in range(len(merge_headers2)):
+            merge_headers2[i] = merge_headers2[i].replace("_"," ")        
+        foreign_key1 = foreign_key1.replace("_"," ")
+        foreign_key2 = foreign_key2.replace("_"," ")
+
+        #Create intermediate report of just air travel info from Transaction Detail Rpt
+        # int_air = data.loc[data['Merchant Category Code Group Description'] == 'AIRLINE']
+
+        # USB = pd.merge()
+        # USB = pd.merge((int_air[cols_needed]),search_by, on=['Merchant Name'])
 
 
 
@@ -168,10 +183,7 @@ def get_headers():
 
 
 
-
-
-
-        return render_template('merged_file.html', msg='Files Succesfully Merged', merge_headers1=merge_headers1, merge_headers2=merge_headers2, foreign_key1=foreign_key1, foreign_key2=foreign_key2) 
+        return render_template('merged_file.html', msg='Files Succesfully Merged', merge_headers1=merge_headers1, merge_headers2=merge_headers2, foreign_key1=foreign_key1, foreign_key2=foreign_key2, form=form) 
     elif request.method == 'GET':
         return render_template('upload.html')        
 

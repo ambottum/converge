@@ -2,11 +2,14 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 {% block app_content %}
 
+HHHIIIIII
+
 {% if merge_headers2 %}
 	<form method="POST" enctype="multipart/form-data" action="{{url_for('get_headers')}}">
+	HHHHHIIIIIIII
 <!-- 	    <input type=“hidden” id=“file1_location” name=“file1_location” value={{ img_src1 }}>
         <input type=“hidden” id=“file2_location” name=“file2_location” value={{ img_src2 }}> -->
-		<table>
+<!-- 		<table>
 			<tr>
 				<td>
 			    	<p> Columns Selected from File 1: <b> {{ merge_headers1 }} </b></p>
@@ -16,7 +19,7 @@
 			    </td>
 
 			    </tr>	
-		</table>    
+		</table>   -->  
 
 {% elif msg %}
 	<p> msg = msg </p>	
