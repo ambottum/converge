@@ -156,6 +156,11 @@ def get_headers():
         form=HiddenForm(request.values)
         foreign_key1 = request.form['fkey1']
         foreign_key2 = request.form['fkey2']
+
+        #no_zero = request.form
+        #check if user wants to exclude zeros
+        no_zero = request.form.getlist('no_zero')
+
         print(form.data['path1'])
         #this will be the pandas code here
         #open spreadsheets to begin merge process
@@ -167,15 +172,19 @@ def get_headers():
             merge_headers2[i] = merge_headers2[i].replace("_"," ")        
         foreign_key1 = foreign_key1.replace("_"," ")
         foreign_key2 = foreign_key2.replace("_"," ")
-
+        #THIS IS NEW CODE ADDED ON SUNDAY 4/26
         df2.rename(columns = {foreign_key2:foreign_key1}, inplace = True)
         merge_headers1.append(foreign_key1)
         merge_headers2.append(foreign_key1)
         df1 = df1[merge_headers1]
         df2 = df2[merge_headers2]
         print("right below here is pd.merge")
-        USB = pd.merge(df1, df2, on = foreign_key1, how='left')
-        USB.to_csv('_USB_Transaction_Report.csv')
+        filename1=form.data['path1'].split("/")[-1]
+        filename2=form.data['path2'].split("/")[-1] 
+        save_file=filename1+"-"+filename2+".csv"
+        file_src=UPLOAD_FOLDER + "/" + save_file      
+        merged_file = pd.merge(df1, df2, on = foreign_key1, how='left')
+        merged_file.to_csv(file_src)
 
         #Create intermediate report of just air travel info from Transaction Detail Rpt
         # int_air = data.loc[data['Merchant Category Code Group Description'] == 'AIRLINE']
@@ -192,7 +201,7 @@ def get_headers():
 
 
 
-        return render_template('merged_file.html', msg='Files Succesfully Merged', merge_headers1=merge_headers1, merge_headers2=merge_headers2, foreign_key1=foreign_key1, foreign_key2=foreign_key2, form=form) 
+        return render_template('merged_file.html', msg='Files Succesfully Merged', merge_headers1=merge_headers1, merge_headers2=merge_headers2, foreign_key1=foreign_key1, foreign_key2=foreign_key2, form=form, no_zero=no_zero, UPLOAD_FOLDER=UPLOAD_FOLDER, save_file=save_file) 
     elif request.method == 'GET':
         return render_template('upload.html')        
 
