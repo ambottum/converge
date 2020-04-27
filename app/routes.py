@@ -168,6 +168,15 @@ def get_headers():
         foreign_key1 = foreign_key1.replace("_"," ")
         foreign_key2 = foreign_key2.replace("_"," ")
 
+        df2.rename(columns = {foreign_key2:foreign_key1}, inplace = True)
+        merge_headers1.append(foreign_key1)
+        merge_headers2.append(foreign_key1)
+        df1 = df1[merge_headers1]
+        df2 = df2[merge_headers2]
+        print("right below here is pd.merge")
+        USB = pd.merge(df1, df2, on = foreign_key1, how='left')
+        USB.to_csv('_USB_Transaction_Report.csv')
+
         #Create intermediate report of just air travel info from Transaction Detail Rpt
         # int_air = data.loc[data['Merchant Category Code Group Description'] == 'AIRLINE']
 
