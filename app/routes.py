@@ -178,16 +178,22 @@ def get_headers():
         merge_headers2.append(foreign_key1)
         df1 = df1[merge_headers1]
         df2 = df2[merge_headers2]
-        print("right below here is pd.merge")
+        print(no_zero)
+
+        if no_zero[0] == 'on':
+            df2 = df2.loc[df2['Transaction Amount'] != '$0.00']
+
         filename1=form.data['path1'].split("/")[-1]
         filename2=form.data['path2'].split("/")[-1] 
-        save_file=filename1+"-"+filename2+".csv"
+        save_file=filename1[:-4]+"-"+filename2[:-4]+".csv"
         file_src=UPLOAD_FOLDER + "/" + save_file      
         merged_file = pd.merge(df1, df2, on = foreign_key1, how='left')
         merged_file.to_csv(file_src)
 
+
         #Create intermediate report of just air travel info from Transaction Detail Rpt
         # int_air = data.loc[data['Merchant Category Code Group Description'] == 'AIRLINE']
+        #search_by = search_by.loc[search_by['Transaction Amount'] != '$0.00']
 
         # USB = pd.merge()
         # USB = pd.merge((int_air[cols_needed]),search_by, on=['Merchant Name'])
