@@ -28,10 +28,16 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
 
-class HiddenForm(FlaskForm):
+class HiddenPaths(FlaskForm):
     path1 = HiddenField("Field 1")
     path2 = HiddenField("Field 2")
-    hmerge_headers1 = HiddenField("Field 3")
-    hmerge_headers2 = HiddenField("Field 4")
-    hforeign_key1 = HiddenField("Field 5")
-    hforeign_key2 = HiddenField("Field 6")
+
+class HiddenFields(FlaskForm):
+    path1 = HiddenField("Field 3")
+    path2 = HiddenField("Field 4")    
+    hmerge_headers1 = HiddenField("Field 5")
+    hmerge_headers2 = HiddenField("Field 6")
+    hforeign_key1 = HiddenField("Field 7")
+    hforeign_key2 = HiddenField("Field 8")
+
+    #TO DO: create two separate classes for paths & then headers & fkeys

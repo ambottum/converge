@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.config.from_object(Config)
 UPLOAD_FOLDER = '/Users/annabottum/Desktop'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER

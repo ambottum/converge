@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% import 'bootstrap/wtf.html' as wtf %}
 {% block app_content %}
+<link rel="stylesheet" type="text/css" href="/static/converge.css">
+
 
   <h1>Upload new File</h1>
 
@@ -21,7 +23,7 @@
         {{ field }}
       {% endfor %}
       
-        <table> 
+        <table class="ambcenter"> 
           <tr>
             <td>
               <p> Uploaded File 1 is: <b> {{ filename1 }} </b></p>
@@ -40,22 +42,22 @@
           </tr>
           <tr>
             <td>
-                <ul>
+                <ul class="list-unstyled" >
                   {% for header in headers1 %}
                     <li> 
-                      <input type="checkbox" id={{ header }} value={{ header }} name="file1" >
-                      <input type="radio" id={{ header }} value={{ header }} name="fkey1" >
+                      <input type="checkbox" id={{ header }} value={{ header }} name="file1" class="box_padding">
+                      <input type="radio" id={{ header }} value={{ header }} name="fkey1" class="box_padding">
                       <label for= {{ header }}>{{ header }}</label>
                     </li>
                   {% endfor %}
                 </ul>
             </td>
             <td>
-              <ul>
+              <ul class="list-unstyled" >
                 {% for header in headers2 %}
                   <li> 
-                    <input type="checkbox" id={{ header }} value={{ header }} name='file2'>
-                    <input type="radio" id={{ header }} value={{ header }} name="fkey2" >
+                    <input type="checkbox" id={{ header }} value={{ header }} name='file2' class="box_padding">
+                    <input type="radio" id={{ header }} value={{ header }} name="fkey2" class="box_padding">
                     <label for={{ header }}>{{ header }}</label>
                   </li>
                 {% endfor %}

@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% import 'bootstrap/wtf.html' as wtf %}
 {% block app_content %}
+{% import static/converge.css %}
+<link rel="stylesheet" type="text/css" href="/static/converge.css">
+
+  <h1>Files Succesfully Merged</h1>
 
 
 {% if merge_headers2 %}
@@ -9,15 +13,60 @@
 		<table>
 			<tr>
 				<td>
-			    	<p> Columns Selected from File 1: <b> {{ merge_headers1 }} </b></p>
+					<table>
+						<tr>
+							<td>
+								<h4> Columns Selected from {{ filename1 }}: </h4>
+								<ul class="list-unstyled" >
+									{% for header in merge_headers1 %}
+										<li>
+											{{ header }}
+										</li>
+									{% endfor %}	
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<h5> Merged on {{ foreign_key1 }} </h5>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td>
+								<h4> Columns Selected from {{ filename2 }}: </h4>
+								<ul class="list-unstyled" >
+									{% for header in merge_headers2 %}
+										<li>
+											{{ header }}
+										</li>
+									{% endfor %}
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<h5> Merged on {{ foreign_key1 }} </h5>
+							</td>
+						</tr>
+					</table>
+
+
+
+<!-- 			    	<p> Columns Selected from File 1: <b> {{ merge_headers1 }} </b></p>
 			    	<p> Columns Selected from File 2: <b> {{ merge_headers2 }} </b></p>
 			    	<p> Foreign Key Column Selected from File 1: <b> {{ foreign_key1 }} </b></p>
 			    	<p> Foreign Key Column Selected from File 2: <b> {{ foreign_key2 }} </b></p>
-			    	<p> New file <b> {{ save_file }} </b> is succesfully saved in <b> {{ UPLOAD_FOLDER }} </b></p>
+			    	<p> New file <b> {{ save_file }} </b> is succesfully saved in <b> {{ UPLOAD_FOLDER }} </b></p> -->
 			    </td>
 
-			    </tr>	
-		</table>    
+			</tr>	
+		</table>
+		<p></p>
+		<p> New file <b> {{ save_file }} </b> is succesfully saved in <b> {{ UPLOAD_FOLDER }} </b></p>    
 
 {% elif msg %}
 	<p> msg = msg </p>	

@@ -5,7 +5,7 @@ import pandas as pd
 from app import app,login, db
 from flask import render_template, request, send_from_directory
 from werkzeug.urls import url_parse
-from app.forms import LoginForm, RegistrationForm, HiddenForm
+from app.forms import LoginForm, RegistrationForm, HiddenPaths, HiddenFields
 from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
@@ -113,7 +113,7 @@ def upload_file():
             img_src1=UPLOAD_FOLDER + "/" + file1.filename
             img_src2=UPLOAD_FOLDER + "/" + file2.filename
 
-            form=HiddenForm(path1=img_src1, path2=img_src2)
+            form=HiddenPaths(path1=img_src1, path2=img_src2)
 
             with open(img_src1) as csv_file:
                 csv_reader = csv.reader(csv_file, delimiter=',')
@@ -151,59 +151,66 @@ def upload_file():
 @app.route('/merged_file', methods=['GET', 'POST'])
 def get_headers():
     if request.method == 'POST':
-        form = HiddenForm(request.values)
-        #print(request.__dict__)  
+        form = HiddenPaths(request.values)
+        path1 = form.data['path1']
+        path2 = form.data['path2']
+        filename1 = form.data['path1'].split("/")[-1]
+        filename2 = form.data['path2'].split("/")[-1]
+        no_zero = request.form.getlist('no_zero')
+
         #merge_headers is a list of all values that are checked 
-        print("ITEMS IN FORM: ",request.form.items())
         #first pass will have a list of merge_headers directly from upload.html, so first pass will enter if statement
         if request.form.getlist('file1'):
-            print("FIRST PASS ",request.values.__dict__)
             merge_headers1 = request.form.getlist('file1')
             merge_headers2 = request.form.getlist('file2')
-            print("MERGE_HEADERS1 TYPE - SHOULD BE LIST",type(merge_headers1))
+
             foreign_key1 = request.form['fkey1']
-            foreign_key2 = request.form['fkey2'] 
+            foreign_key2 = request.form['fkey2']
+
             #turn above items into lists so that they can be packed into HIddenForm and unpacked in else statement
             mh_string1 = ','.join(merge_headers1)
-            mh_string1 = "TEST"
-            print("MH_STRING! SHOULD BE STRING",mh_string1, type(mh_string1))
             mh_string2 = ','.join(merge_headers2)
-            fk_string1 = ','.join(foreign_key1)
-            fk_string2 = ','.join(foreign_key2)
 
-            form = HiddenForm(hmerge_headers1=mh_string1, hmerge_headers2=mh_string2, hforeign_key1=fk_string1, hforeign_key2=fk_string2)
-            print("MERGE_HEADERS1 TYPE AFTER HIDDENFORM ",type(merge_headers1))
-            #form2 = [merge_headers1, merge_headers2, foreign_key1, foreign_key2]            
-            no_zero = request.form.getlist('no_zero')
+            form = HiddenFields(path1=path1, path2=path2, hmerge_headers1=mh_string1, hmerge_headers2=mh_string2, hforeign_key1=foreign_key1, hforeign_key2=foreign_key2)
+          
+            
             print("FIRST PASS merge_headers1 ",merge_headers1)
-            #return form2
+            #return render_template('ignore_fields.html', merge_headers1=merge_headers1, merge_headers2=merge_headers2, filename1=filename1, filename2=filename2, form=form)
+
+            print("JUST BEFORE NOZERO IF", form)
+            if no_zero and no_zero[0] == 'on':
+                print("NO_ZERO ",no_zero)
+                return render_template('ignore_fields.html', merge_headers1=merge_headers1, merge_headers2=merge_headers2, filename1=filename1, filename2=filename2, form=form)
+
+            #return render_template('merged_file.html')    
+
             #second pass will NOT have a list of merge_headers because it is coming from ignore_fields. so we need to grab the list of merge_headers from the hiddenforms
         else:
             print("SECOND PASS ", request.values.__dict__)
-            form = HiddenForm(request.values)
-            print("FORM second pass values ", form.data.values())
-            merge_headers1 = form.data['hmerge_headers1']
-            #print(form.data['merge_headers1'])
-            merge_headers2 = form.data['hmerge_headers2']
-            foreign_key1 = form.data['hforeign_key1']
-            foreign_key2 = form.data['hforeign_key2']
+            form_fields = HiddenFields(request.values)
+            form_paths = HiddenPaths(request.values)
+
+            path1 = form_paths.data['path1']
+            path2 = form_paths.data['path2']
+
+            filename1=form_paths.data['path1'].split("/")[-1]
+            print("FILENAME1 IS ",filename1)
+            filename2=form_paths.data['path2'].split("/")[-1]
+
+            merge_headers1 = form_fields.data['hmerge_headers1'].split(",")
+            merge_headers2 = form_fields.data['hmerge_headers2'].split(",")
+            foreign_key1 = form_fields.data['hforeign_key1']
+            foreign_key2 = form_fields.data['hforeign_key2']
             
             no_zero = [] #make no_zero an empty list so that it doesn't enter if statement below
-            #print("merge_headers1, SECOND PASS ",merge_headers1)
-
-        filename1=form.data['path1'].split("/")[-1]
-        filename2=form.data['path2'].split("/")[-1] 
-        #form2 = HiddenForm(merge_headers1=merge_headers1, merge_headers2=merge_headers2, foreign_key1=foreign_key1, foreign_key2=foreign_key2)
-
         
         ## TO DO remove hardcoding of Transacation Amt & $0
-        print("JUST BEFORE NOZERO IF", form)
-        if no_zero and no_zero[0] == 'on':
-            print("NO_ZERO ",no_zero)
-            return render_template('ignore_fields.html', merge_headers1=merge_headers1, merge_headers2=merge_headers2, filename1=filename1, filename2=filename2, form=form)
+        # print("JUST BEFORE NOZERO IF", form)
+        # if no_zero and no_zero[0] == 'on':
+        #     print("NO_ZERO ",no_zero)
+        #     return render_template('ignore_fields.html', merge_headers1=merge_headers1, merge_headers2=merge_headers2, filename1=filename1, filename2=filename2, form=form)
         #checking to see if ignore_field1 or ignore_field2 (or both) were checked. if not, sets equal to null
         
-        print("SECOND PASS REQUEST.FORM.ITEMS() ", request.form.items())
         if 'ignore_field1' in request.form.keys():    
             ignore_field1 = request.form['ignore_field1'].replace("_"," ")
         else:
@@ -213,12 +220,10 @@ def get_headers():
         else: 
             ignore_field2 = None    
 
-
-        print("PATH 1: ",form.data['path1'])
         #this will be the pandas code here
         #open spreadsheets to begin merge process
-        df1 = pd.read_csv(form.data['path1'])
-        df2 = pd.read_csv(form.data['path2'])
+        df1 = pd.read_csv(path1)
+        df2 = pd.read_csv(path2)
         if ignore_field1:
             df1 = df1.loc[df1[ignore_field1] != '$0.00']
         if ignore_field2:
@@ -231,6 +236,8 @@ def get_headers():
             merge_headers2[i] = merge_headers2[i].replace("_"," ")        
         foreign_key1 = foreign_key1.replace("_"," ")
         foreign_key2 = foreign_key2.replace("_"," ")
+
+        
         #THIS IS NEW CODE ADDED ON SUNDAY 4/26
         df2.rename(columns = {foreign_key2:foreign_key1}, inplace = True)
         merge_headers1.append(foreign_key1)
@@ -264,7 +271,7 @@ def get_headers():
 
 
 
-        return render_template('merged_file.html', msg='Files Succesfully Merged', merge_headers1=merge_headers1, merge_headers2=merge_headers2, foreign_key1=foreign_key1, foreign_key2=foreign_key2, form=form, no_zero=no_zero, UPLOAD_FOLDER=UPLOAD_FOLDER, save_file=save_file) 
+        return render_template('merged_file.html', msg='Files Succesfully Merged', merge_headers1=merge_headers1, merge_headers2=merge_headers2, foreign_key1=foreign_key1, foreign_key2=foreign_key2, form=form, no_zero=no_zero, UPLOAD_FOLDER=UPLOAD_FOLDER, save_file=save_file, filename1=filename1, filename2=filename2) 
     elif request.method == 'GET':
         return render_template('upload.html')        
 
