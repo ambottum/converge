@@ -29,6 +29,9 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Please use a different email address.')
 
 class HiddenForm(FlaskForm):
-  path1 = HiddenField("Field 1")
-  path2 = HiddenField("Field 2")
-
+    path1 = HiddenField("Field 1")
+    path2 = HiddenField("Field 2")
+    hmerge_headers1 = HiddenField("Field 3")
+    hmerge_headers2 = HiddenField("Field 4")
+    hforeign_key1 = HiddenField("Field 5")
+    hforeign_key2 = HiddenField("Field 6")

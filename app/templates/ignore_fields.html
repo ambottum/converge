@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+
+  <h1> Ignore Values </h1>
+
+  <h4> 1) Select the file from which you'd like to ignore values </h4>
+  
+
+      <form method="POST" enctype="multipart/form-data" action="{{ url_for('get_headers') }}">
+
+      {% for field in form %}
+        {{ field }}
+      {% endfor %}
+      
+        <table> 
+          <tr>
+            <td>
+              <p> Selected Columns from  <b> {{ filename1 }} </b></p>
+            </td>
+
+            <td>
+              <p> Selected Columns from  <b> {{ filename2 }} </b></p>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+                <ul>
+                  {% for header in merge_headers1 %}
+                    <li> 
+                      <input type="radio" id={{ header }} value={{ header }} name="ignore_field1" >
+<!--                       <input type="radio" id={{ header }} value={{ header }} name="fkey1" >
+ -->                      <label for= {{ header }}>{{ header }}</label>
+                    </li>
+                  {% endfor %}
+                </ul>
+            </td>
+            <td>
+              <ul>
+                {% for header in merge_headers2 %}
+                  <li> 
+                    <input type="radio" id={{ header }} value={{ header }} name='ignore_field2'>
+<!--                     <input type="radio" id={{ header }} value={{ header }} name="fkey2" > -->
+                    <label for={{ header }}>{{ header }}</label>
+                  </li>
+                {% endfor %}
+              </ul>
+            </td>  
+          </tr>
+<!--           <tr>
+            <td>
+              <input type="checkbox" id="no_zero" value"no_zero" name="no_zero">
+              <label for="no_zero"> Would you like to exclude $0 values? </label> 
+            </td>
+          </tr>  -->   
+        </table>
+        <input type="submit" value=Submit>
+      </form>
+
+
+{% endblock %}
