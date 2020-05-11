@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% import 'bootstrap/wtf.html' as wtf %}
 {% block app_content %}
-{% import static/converge.css %}
 <link rel="stylesheet" type="text/css" href="/static/converge.css">
 
   <h1>Files Succesfully Merged</h1>
@@ -68,8 +67,7 @@
 		<p></p>
 		<p> New file <b> {{ save_file }} </b> is succesfully saved in <b> {{ UPLOAD_FOLDER }} </b></p>    
 
-{% elif msg %}
-	<p> msg = msg </p>	
+	<p> {{ msg }} </p>
 {% endif %}		
 
 

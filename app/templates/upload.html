@@ -4,77 +4,114 @@
 <link rel="stylesheet" type="text/css" href="/static/converge.css">
 
 
-  <h1>Upload new File</h1>
+  <h1>Upload Files to Merge</h1>
 
   <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_file') }}">
-    <p><input type="file" name="file1"></p>
-    <p><input type="file" name="file2"></p>     
-      <input type="submit" value=Upload>
-
+    <label for="file1">Select parent file:</label>
+    <p><input type="file" class="textbox_padding" name="file1"></p>
+    <br>
+    <label for="file2">Select file to merge from:</label>
+    <p><input type="file" class="textbox_padding" name="file2">
+    </p>   
+      <br>
+      <input type="submit" class="btn btn-success" value=Upload>
     </form>
-
-
-   <h1>Result:</h1>
   
    {% if filename1 %}
+      <hr />
+      <h2>File Merge Information</h2>
+      <h4>(1) Select all columns to include in new file.</h4>
+      <h4>(2) Select single column from each file on which to join.</h4>
+      <br>
       <form method="POST" enctype="multipart/form-data" action="{{ url_for('get_headers') }}">
 
       {% for field in form %}
         {{ field }}
       {% endfor %}
       
-        <table class="ambcenter"> 
-          <tr>
-            <td>
-              <p> Uploaded File 1 is: <b> {{ filename1 }} </b></p>
-            </td>
-            <td>
-              <p> Uploaded File 2 is: <b> {{ filename2 }} </b></p>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <p> Column Names: </p>
-            </td>
-            <td>
-              <p> Column Names: </p>
-            </td>
-          </tr>
-          <tr>
-            <td>
-                <ul class="list-unstyled" >
-                  {% for header in headers1 %}
-                    <li> 
-                      <input type="checkbox" id={{ header }} value={{ header }} name="file1" class="box_padding">
-                      <input type="radio" id={{ header }} value={{ header }} name="fkey1" class="box_padding">
-                      <label for= {{ header }}>{{ header }}</label>
-                    </li>
-                  {% endfor %}
-                </ul>
-            </td>
-            <td>
-              <ul class="list-unstyled" >
-                {% for header in headers2 %}
-                  <li> 
-                    <input type="checkbox" id={{ header }} value={{ header }} name='file2' class="box_padding">
-                    <input type="radio" id={{ header }} value={{ header }} name="fkey2" class="box_padding">
-                    <label for={{ header }}>{{ header }}</label>
-                  </li>
-                {% endfor %}
-              </ul>
-            </td>  
-          </tr>
-          <tr>
-            <td>
-              <input type="checkbox" id="no_zero" value"no_zero" name="no_zero">
-              <label for="no_zero"> Would you like to exclude $0 values? </label> 
-            </td>
-          </tr>    
-        </table>
-        <input type="submit" value=Submit>
-      </form>
-   {% elif msg %}
-     <p> msg = msg </p>
-   {% endif %}
 
+
+
+
+    <table>
+      <tr>
+        <td colspan="3">
+          <p> Uploaded File 1 is: <b> {{ filename1 }} </b></p>
+        </td>
+        <td colspan="3">
+          <p> Uploaded File 2 is: <b> {{ filename2 }} </b></p>
+        </td>    
+      </tr>
+      <tr>
+        <td>
+          (1)
+        </td>
+        <td>
+          (2)
+        </td>
+        <td>
+          Column Names:
+        </td>
+        <td>
+          (1)
+        </td>
+        <td>
+          (2)
+        </td>
+        <td>
+          Column Names:
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <ul class="list-unstyled" >
+            {% for header in headers1 %}
+              <li class="li_height">
+                <input type="checkbox" id={{ header }} value={{ header }} name="file1" class="box_width">
+                <input type="radio" id={{ header }} value={{ header }} name="fkey1" class="box_width">
+              </li>
+            {% endfor %}
+          </ul>
+        </td>
+        <td colspan="1"> 
+          <ul class="list-unstyled">
+            {% for header in headers1_ %}
+              <li class="li_height">
+                <label for= {{ header }}>{{ header }}</label>
+              </li>
+            {% endfor %}
+          </ul>
+        </td>
+
+        <td colspan="2">
+          <ul class="list-unstyled" >
+            {% for header in headers2 %}
+              <li class="li_height">
+                <input type="checkbox" id={{ header }} value={{ header }} name="file2" class="box_width">
+                <input type="radio" id={{ header }} value={{ header }} name="fkey2" class="box_width">
+              </li>
+            {% endfor %}
+          </ul>
+        </td>
+        <td colspan="1">
+          <ul class="list-unstyled">
+            {% for header in headers2_ %}
+              <li class="li_height">
+                <label for= {{ header }}>{{ header }}</label>
+              </li>
+            {% endfor %}
+          </ul>    
+        </td>
+      </tr>  
+    </table>
+    <hr />
+    <input type="checkbox" id="no_zero" value"no_zero" name="no_zero">
+    <label for="no_zero"> Would you like to exclude specific values? </label> 
+    <br>
+    <hr />
+    <input type="submit" class="btn btn-primary" value=Submit>
+  </form>
+  {% elif msg %}
+    <p> msg = msg </p>
+  {% endif %}
 {% endblock %}

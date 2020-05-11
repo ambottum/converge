@@ -1,6 +1,6 @@
 import csv, json, sys
 import os
-import pandas as pd 
+import pandas as pd
 #from ocr_core import ocr_core
 from app import app,login, db
 from flask import render_template, request, send_from_directory
@@ -13,6 +13,7 @@ from datetime import datetime
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 from werkzeug.utils import secure_filename
+from collections import Counter
 
 #reading in env variable for UPLOAD_FOLDER from __init__.py
 UPLOAD_FOLDER=app.config['UPLOAD_FOLDER']
@@ -30,14 +31,14 @@ def allowed_file(filename):
 def index():
     user = {'username': 'Miguel'}
     posts = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
+        # {
+        #     'author': {'username': 'John'},
+        #     'body': 'Beautiful day in Portland!'
+        # },
+        # {
+        #     'author': {'username': 'Susan'},
+        #     'body': 'The Avengers movie was so cool!'
+        # }
     ]
     return render_template('index.html', title='Converge Home', posts=posts)
 
@@ -134,14 +135,20 @@ def upload_file():
                         line_count += 1
                     else:
                         line_count += 1              
-            #replace spaces with underscores             
+            #replace spaces with underscores
+            headers1_ = []  
+            headers2_ = []          
             for i in range(len(headers1)):
                 headers1[i] = headers1[i].replace(" ","_")
+                headers1_.append(headers1[i].replace("_"," "))
             for i in range(len(headers2)):
                 headers2[i] = headers2[i].replace(" ","_")
+                headers2_.append(headers2[i].replace("_"," "))
+            print(headers1_)
             return render_template('upload.html', msg='File Succesfully Uploaded', 
                                     filename1=file1.filename, filename2=file2.filename, 
-                                    headers1=headers1, headers2=headers2, form=form) 
+                                    headers1=headers1, headers2=headers2, headers1_=headers1_,
+                                    headers2_=headers2_,form=form)
 
     elif request.method == 'GET':
         return render_template('upload.html')
@@ -194,7 +201,7 @@ def get_headers():
             path2 = form_paths.data['path2']
 
             filename1=form_paths.data['path1'].split("/")[-1]
-            print("FILENAME1 IS ",filename1)
+
             filename2=form_paths.data['path2'].split("/")[-1]
 
             merge_headers1 = form_fields.data['hmerge_headers1'].split(",")
@@ -213,22 +220,33 @@ def get_headers():
         
         if 'ignore_field1' in request.form.keys():    
             ignore_field1 = request.form['ignore_field1'].replace("_"," ")
+            ignore_value1 = request.form['ignore_value1']
+
         else:
             ignore_field1 = None
+
         if 'ignore_field2' in request.form.keys():    
             ignore_field2 = request.form['ignore_field2'].replace("_"," ")
+            ignore_value2 = request.form['ignore_value2']
         else: 
-            ignore_field2 = None    
+            ignore_field2 = None
+  
 
         #this will be the pandas code here
         #open spreadsheets to begin merge process
         df1 = pd.read_csv(path1)
         df2 = pd.read_csv(path2)
+
+        
+        msg = ""
         if ignore_field1:
-            df1 = df1.loc[df1[ignore_field1] != '$0.00']
+            ignore1_count = len(df1[df1[ignore_field1] == ignore_value1])
+            msg = msg + "Excluded "+ignore_value1+" values from "+filename1+" "+str(ignore1_count)+" times \n"
+            df1 = df1.loc[df1[ignore_field1] != ignore_value1]
         if ignore_field2:
-            print("DF2 HEADERS ",df2.head())    
-            df2 = df2.loc[df2[ignore_field2] != '$0.00']
+            ignore2_count = len(df2[df2[ignore_field2] == ignore_value2])
+            msg = msg + "Excluded "+ignore_value2+" values from "+filename2+" "+str(ignore2_count)+" times \n" 
+            df2 = df2.loc[df2[ignore_field2] != ignore_value2]
 
         for i in range(len(merge_headers1)): 
             merge_headers1[i] = merge_headers1[i].replace("_"," ")
@@ -244,40 +262,25 @@ def get_headers():
         merge_headers2.append(foreign_key1)
         df1 = df1[merge_headers1]
         df2 = df2[merge_headers2]
-        
 
-        #no_zero = request.form
-        #check if user wants to exclude zeros
-        
-        save_file=filename1[:-4]+"-"+filename2[:-4]+".csv"
-        file_src=UPLOAD_FOLDER + "/" + save_file      
-        merged_file = pd.merge(df1, df2, on = foreign_key1, how='left')
-        merged_file.to_csv(file_src)
+        #get percentage of merge matches
+        matches = set(df1[foreign_key1]).intersection(set(df2[foreign_key2]))
+        percent = len(matches) / len(df1) * 100.00
 
-
-        #Create intermediate report of just air travel info from Transaction Detail Rpt
-        # int_air = data.loc[data['Merchant Category Code Group Description'] == 'AIRLINE']
-        #search_by = search_by.loc[search_by['Transaction Amount'] != '$0.00']
-
-        # USB = pd.merge()
-        # USB = pd.merge((int_air[cols_needed]),search_by, on=['Merchant Name'])
+        if percent <= 5.00:
+            return render_template('upload.html',msg="Foreign Key Match was less than 5% \n")
+        else:
+            print("Files Merged W/ ", percent)
+            msg = msg + str(round(percent,2))+"% of rows in file 1 matched file 2 \n"
+            #msg2 = "Excluded values "+ignore_value2
 
 
+            save_file=filename1[:-4]+"-"+filename2[:-4]+".csv"
+            file_src=UPLOAD_FOLDER + "/" + save_file      
+            merged_file = pd.merge(df1, df2, on = foreign_key1, how='left')            
+            merged_file.to_csv(file_src)
 
-
-
-
-
-
-
-
-        return render_template('merged_file.html', msg='Files Succesfully Merged', merge_headers1=merge_headers1, merge_headers2=merge_headers2, foreign_key1=foreign_key1, foreign_key2=foreign_key2, form=form, no_zero=no_zero, UPLOAD_FOLDER=UPLOAD_FOLDER, save_file=save_file, filename1=filename1, filename2=filename2) 
+        return render_template('merged_file.html', msg=msg, merge_headers1=merge_headers1, merge_headers2=merge_headers2, foreign_key1=foreign_key1, foreign_key2=foreign_key2, form=form, no_zero=no_zero, UPLOAD_FOLDER=UPLOAD_FOLDER, save_file=save_file, filename1=filename1, filename2=filename2) 
     elif request.method == 'GET':
         return render_template('upload.html')        
 
-
-
-# @app.route('/uploads/<filename>')
-# def uploaded_file(filename):
-#     return send_from_directory(app.config['UPLOAD_FOLDER'],
-#                                filename)
