@@ -7,8 +7,6 @@
 
 
 {% if merge_headers2 %}
-	<!-- <form method="POST" enctype="multipart/form-data" action="{{url_for('get_headers')}}"> -->
-	<!-- {{ no_zero }} -->
 	<table>
 		<tr>
 			<td>
@@ -51,11 +49,6 @@
 					</tr>
 				</table>	
 			</td>
-<!-- 			    	<p> Columns Selected from File 1: <b> {{ merge_headers1 }} </b></p>
-		    	<p> Columns Selected from File 2: <b> {{ merge_headers2 }} </b></p>
-		    	<p> Foreign Key Column Selected from File 1: <b> {{ foreign_key1 }} </b></p>
-		    	<p> Foreign Key Column Selected from File 2: <b> {{ foreign_key2 }} </b></p>
-		    	<p> New file <b> {{ save_file }} </b> is succesfully saved in <b> {{ UPLOAD_FOLDER }} </b></p> -->
 		</tr>	
 	</table>
 	<p></p>
@@ -87,7 +80,6 @@
 		</p>
 	{% endif %}
 	
-	<p> {{ ignore_msg }} </p>
 {% endif %}		
 
 

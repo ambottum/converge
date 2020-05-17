@@ -39,8 +39,7 @@
                   {% for header in merge_headers1 %}
                     <li> 
                       <input type="radio" id={{ header }} value={{ header }} name="ignore_field1" >
-<!--                       <input type="radio" id={{ header }} value={{ header }} name="fkey1" >
- -->                      <label for= {{ header }}>{{ header }}</label>
+                     <label for= {{ header }}>{{ header }}</label>
                     </li>
                   {% endfor %}
                 </ul>
