@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, HiddenField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
+from flask_wtf import Form
+
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -25,3 +27,17 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
+
+class HiddenPaths(FlaskForm):
+    path1 = HiddenField("Field 1")
+    path2 = HiddenField("Field 2")
+
+class HiddenFields(FlaskForm):
+    path1 = HiddenField("Field 3")
+    path2 = HiddenField("Field 4")    
+    hmerge_headers1 = HiddenField("Field 5")
+    hmerge_headers2 = HiddenField("Field 6")
+    hforeign_key1 = HiddenField("Field 7")
+    hforeign_key2 = HiddenField("Field 8")
+
+    #TO DO: create two separate classes for paths & then headers & fkeys

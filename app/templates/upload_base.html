@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+<link rel="stylesheet" type="text/css" href="/static/converge.css">
+
+
+  <h1>Upload Files to Merge</h1>
+
+  <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_file') }}">
+    <label for="file1">Select parent file:</label>
+    <p><input type="file" class="textbox_padding" name="file1"></p>
+    <br>
+    <label for="file2">Select file to merge from:</label>
+    <p><input type="file" class="textbox_padding" name="file2">
+    </p>   
+      <br>
+      <input type="submit" class="btn btn-success" value=Upload>
+    </form>
+  
+   {% if filename1 %}
+      <br>
+      <h2>Select Information to Merge</h2>
+      <form method="POST" enctype="multipart/form-data" action="{{ url_for('get_headers') }}">
+
+      {% for field in form %}
+        {{ field }}
+      {% endfor %}
+      
+        <table> 
+          <tr>
+            <td>
+              <p> Uploaded File 1 is: <b> {{ filename1 }} </b></p>
+            </td>
+            <td>
+              <p> Uploaded File 2 is: <b> {{ filename2 }} </b></p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p> Column Names: </p>
+            </td>
+            <td>
+              <p> Column Names: </p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+                <ul class="list-unstyled" >
+                  {% for header in headers1 %}
+                    <li> 
+                      <input type="checkbox" id={{ header }} value={{ header }} name="file1" class="box_width">
+                      <input type="radio" id={{ header }} value={{ header }} name="fkey1" class="box_width">
+                      <label for= {{ header }}>{{ header }}</label>
+                    </li>
+                  {% endfor %}
+                </ul>
+            </td>
+            <td>
+              <ul class="list-unstyled" >
+                {% for header in headers2 %}
+                  <li> 
+                    <input type="checkbox" id={{ header }} value={{ header }} name='file2' class="box_width">
+                    <input type="radio" id={{ header }} value={{ header }} name="fkey2" class="box_width">
+                    <label for={{ header }}>{{ header }}</label>
+                  </li>
+                {% endfor %}
+              </ul>
+            </td>  
+          </tr>
+          <tr>
+            <td>
+              <input type="checkbox" id="no_zero" value"no_zero" name="no_zero">
+              <label for="no_zero"> Would you like to exclude $0 values? </label> 
+            </td>
+          </tr>    
+        </table>
+        <input type="submit" class="btn btn-primary" value=Submit>
+      </form>
+   {% elif msg %}
+     <p> msg = msg </p>
+   {% endif %}
+
+{% endblock %}

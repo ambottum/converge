@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+<link rel="stylesheet" type="text/css" href="/static/converge.css">
+
+  <h1> Ignore Values </h1>
+  
+      {% if ignore_msg %}
+        <div class="alert">
+          {{ ignore_msg }}
+        </div>
+      {% endif %}
+
+      <form method="POST" enctype="multipart/form-data" action="{{ url_for('get_headers') }}">
+
+      {% for field in form %}
+        {{ field }}
+      {% endfor %}
+      
+        <table> 
+          <tr>
+            <td colspan="2">
+              <h4> 1) Select the file from which you'd like to ignore values </h4>
+            </td>
+          </tr>
+          <tr>   
+            <td>
+              <p> Selected Columns from  <b> {{ filename1 }} </b></p>
+            </td>
+
+            <td>
+              <p> Selected Columns from  <b> {{ filename2 }} </b></p>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+                <ul class="list-unstyled">
+                  {% for header in merge_headers1 %}
+                    <li> 
+                      <input type="radio" id={{ header }} value={{ header }} name="ignore_field1" >
+                     <label for= {{ header }}>{{ header }}</label>
+                    </li>
+                  {% endfor %}
+                </ul>
+            </td>
+            <td>
+              <ul class="list-unstyled">
+                {% for header in merge_headers2 %}
+                  <li> 
+                    <input type="radio" id={{ header }} value={{ header }} name='ignore_field2'>
+                    <label for={{ header }}>{{ header }}</label>
+                  </li>
+                {% endfor %}
+              </ul>
+            </td>  
+          </tr>
+        <tr>
+          <td colspan="2">
+            <h4> 2) Enter the value you'd like to exclude (ex $0.00) </h4>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p><input name="ignore_value1" class="form-control textbox_padding textbox_width" placeholder="File 1 Ignore Value"></p>
+          </td>
+          <td>  
+            <p><input name="ignore_value2" class="form-control textbox_padding textbox_width" placeholder="File 2 Ignore Value"></p> 
+          </td>  
+          </tr>
+        </table>
+        <hr />
+        <input type="submit" class="btn btn-primary" value=Submit>
+      </form>
+
+
+{% endblock %}

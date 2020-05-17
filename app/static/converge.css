@@ -1,0 +1,29 @@
+td {
+	padding-left:20px;
+	vertical-align: top;
+}
+.box_width {
+	width:30px !important;
+}
+.textbox_padding {
+	margin-right: 10px;
+}
+.li_height {
+	height: 20px;
+}
+hr {
+	background-color:gray;
+}
+.textbox_width {
+	width: 200px;
+}
+.alert {
+  padding: 20px;
+  background-color: red; /* Red */
+  color: white;
+  margin-bottom: 15px;
+}
+.alert_text {
+	color: red;
+	font-weight: bold;
+}
