@@ -3,7 +3,13 @@
 {% block app_content %}
 <link rel="stylesheet" type="text/css" href="/static/converge.css">
 
-  <h1> Ignore Values </h1>  
+  <h1> Ignore Values </h1>
+  
+      {% if ignore_msg %}
+        <div class="alert">
+          {{ ignore_msg }}
+        </div>
+      {% endif %}
 
       <form method="POST" enctype="multipart/form-data" action="{{ url_for('get_headers') }}">
 

@@ -17,3 +17,13 @@ hr {
 .textbox_width {
 	width: 200px;
 }
+.alert {
+  padding: 20px;
+  background-color: red; /* Red */
+  color: white;
+  margin-bottom: 15px;
+}
+.alert_text {
+	color: red;
+	font-weight: bold;
+}

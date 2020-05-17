@@ -9,66 +9,91 @@
 {% if merge_headers2 %}
 	<!-- <form method="POST" enctype="multipart/form-data" action="{{url_for('get_headers')}}"> -->
 	<!-- {{ no_zero }} -->
-		<table>
-			<tr>
-				<td>
-					<table>
-						<tr>
-							<td>
-								<h4> Columns Selected from {{ filename1 }}: </h4>
-								<ul class="list-unstyled" >
-									{% for header in merge_headers1 %}
-										<li>
-											{{ header }}
-										</li>
-									{% endfor %}	
-								</ul>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<h5> Merged on {{ foreign_key1 }} </h5>
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td>
-					<table>
-						<tr>
-							<td>
-								<h4> Columns Selected from {{ filename2 }}: </h4>
-								<ul class="list-unstyled" >
-									{% for header in merge_headers2 %}
-										<li>
-											{{ header }}
-										</li>
-									{% endfor %}
-								</ul>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<h5> Merged on {{ foreign_key1 }} </h5>
-							</td>
-						</tr>
-					</table>
-
-
-
+	<table>
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<td>
+							<h4> Columns Selected from {{ filename1 }}: </h4>
+						</td>
+						<td>
+							<h4> Columns Selected from {{ filename2 }}: </h4>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<ul class="list-unstyled" >
+								{% for header in merge_headers1 %}
+									<li>
+										{{ header }}
+									</li>
+								{% endfor %}	
+							</ul>
+						</td>
+						<td>
+							<ul class="list-unstyled" >
+								{% for header in merge_headers2 %}
+									<li>
+										{{ header }}
+									</li>
+								{% endfor %}
+							</ul>							
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h5> Merged on {{ foreign_key1 }} </h5>
+						</td>
+						<td>
+							<h5> Merged on {{ foreign_key1 }} </h5>
+						</td>
+					</tr>
+				</table>	
+			</td>
 <!-- 			    	<p> Columns Selected from File 1: <b> {{ merge_headers1 }} </b></p>
-			    	<p> Columns Selected from File 2: <b> {{ merge_headers2 }} </b></p>
-			    	<p> Foreign Key Column Selected from File 1: <b> {{ foreign_key1 }} </b></p>
-			    	<p> Foreign Key Column Selected from File 2: <b> {{ foreign_key2 }} </b></p>
-			    	<p> New file <b> {{ save_file }} </b> is succesfully saved in <b> {{ UPLOAD_FOLDER }} </b></p> -->
-			    </td>
-
-			</tr>	
-		</table>
-		<p></p>
-		<p> New file <b> {{ save_file }} </b> is succesfully saved in <b> {{ UPLOAD_FOLDER }} </b></p>    
+		    	<p> Columns Selected from File 2: <b> {{ merge_headers2 }} </b></p>
+		    	<p> Foreign Key Column Selected from File 1: <b> {{ foreign_key1 }} </b></p>
+		    	<p> Foreign Key Column Selected from File 2: <b> {{ foreign_key2 }} </b></p>
+		    	<p> New file <b> {{ save_file }} </b> is succesfully saved in <b> {{ UPLOAD_FOLDER }} </b></p> -->
+		</tr>	
+	</table>
+	<p></p>
+	<hr />	
+	<p> New file <b> {{ save_file }} </b> is succesfully saved in <b> {{ UPLOAD_FOLDER }} </b></p>    
 
 	<p> {{ msg }} </p>
+	{% if ignore_value1 %}
+		<p> 
+			{% if ignore1_count == 0 %}
+				<span class='alert_text'>
+			{% else %}
+				<span>
+			{% endif %}
+				Excluded {{ ignore_value1 }} values from {{ filename1 }}, {{ ignore1_count }} times. 
+				</span>
+		</p>
+	{% endif %}
+
+	{% if ignore_value2 %}
+		<p>
+			{% if ignore2_count == 0 %}
+				<span class='alert_text'>
+			{% else %}
+				<span>	
+			{% endif %}	
+				Excluded {{ ignore_value2 }} values from {{ filename2 }}, {{ ignore2_count }} times.
+				</span>
+		</p>
+	{% endif %}
+	
+	<p> {{ ignore_msg }} </p>
 {% endif %}		
 
 
 {% endblock %}
+
+
+
+
+
